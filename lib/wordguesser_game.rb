@@ -12,6 +12,29 @@ class WordGuesserGame
     @wrong_guesses = ''
   end
 
+  def guess(letter)
+    raise ArgumentError if letter.nil? || letter.empty? ||letter !~ /^[a-zA-Z]$/
+    letter = letter.downcase
+    return false if @guesses.include?(letter) || @wrong_guesses.include?(letter)
+
+    if @word.include?(letter)
+      @guesses += letter
+    else 
+      @wrong_guesses += letter
+    end
+    true
+  end
+
+  def word_with_guesses
+    @word.chars.map { |c| @guesses.include?(c) ? c: '-'}.join
+  end
+
+  def check_win_or_lose
+    return :lose if @wrong_guesses.length >=7
+    return :win if word_with_guesses == @word
+    :play
+  end
+
 
   # You can test it by installing irb via $ gem install irb
   # and then running $ irb -I. -r app.rb
